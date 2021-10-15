@@ -31,13 +31,16 @@ local function factory(args)
                 elseif k == "SwapTotal"    then mem_now.swap  = floor(v / 1024 + 0.5)
                 elseif k == "SwapFree"     then mem_now.swapf = floor(v / 1024 + 0.5)
                 elseif k == "SReclaimable" then mem_now.srec  = floor(v / 1024 + 0.5)
+                elseif k == "MemAvailable" then mem_now.avail = floor(v / 1024 + 0.5)
                 end
             end
         end
 
         mem_now.used = mem_now.total - mem_now.free - mem_now.buf - mem_now.cache - mem_now.srec
         mem_now.swapused = mem_now.swap - mem_now.swapf
-        mem_now.perc = math.floor(mem_now.used / mem_now.total * 100)
+        --mem_now.perc = math.floor(mem_now.used / mem_now.total * 100)
+        mem_now.perc = math.floor( (1.0 - mem_now.avail/mem_now.total) * 100)
+        -- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=34e431b0ae398fc54ea69ff85ec700722c9da773
 
         widget = mem.widget
         settings()
